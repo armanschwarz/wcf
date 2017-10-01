@@ -8,7 +8,7 @@ variables_map BuildVariablesMap(int argc, char** argv)
 {
     variables_map vm;
 
-    options_description desc{"Print newline counts for the provided file"};
+    options_description desc{"fast and fuzzy line counts, with optional best-guesses while you wait"};
 
     desc.add_options()
         ("help,h", "Display this help screen")
@@ -17,7 +17,7 @@ variables_map BuildVariablesMap(int argc, char** argv)
         ("live,l", bool_switch()->default_value(false),
             "Update the best guess after each interval, and return when the actual line count is known. This overrides default behavior, where wcf simply returns after the first interval with the line count guess")
         ("simple-output,s", bool_switch()->default_value(false),
-            "Output only the guess value without accuracy estimation. If live mode is disabled this will cause wcf to only output the guess value once")
+            "Output only the guess value without accuracy estimation (useful if you want the output to be machine-readable).")
         ("time-interval,t", value<double>()->default_value(0.25),
             "Time in seconds between line count updates. Set to 0 to only display the line count once the whole file has been read.");
 
