@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 
     if (!file.is_open())
     {
-        std::cerr << "failed to open " << filename << std::endl;
+        std::cout << "failed to open " << filename << std::endl;
         return 1;
     }
 
@@ -34,7 +34,6 @@ int main(int argc, char** argv)
         boost::filesystem::file_size(filename),
         std::cout,
         vm["time-interval"].as<double>(),
-        1024u,
         vm["live"].as<bool>(),
         vm["simple-output"].as<bool>());
 }

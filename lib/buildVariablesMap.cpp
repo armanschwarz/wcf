@@ -11,11 +11,11 @@ variables_map BuildVariablesMap(int argc, char** argv)
     options_description desc{"fast and fuzzy line counts, with optional best-guesses while you wait"};
 
     desc.add_options()
-        ("help,h", "Display this help screen")
+        ("help,h", "Display this help screen!")
         ("file,f", value<std::string>()->required(),
-            "Input file to count lines from")
+            "The input file to count lines from.")
         ("live,l", bool_switch()->default_value(false),
-            "Update the best guess after each interval, and return when the actual line count is known. This overrides default behavior, where wcf simply returns after the first interval with the line count guess")
+            "Update the best guess after each interval, and return when the actual line count is known. This overrides default behavior, where wcf simply returns after the first interval with the first line count estimate.")
         ("simple-output,s", bool_switch()->default_value(false),
             "Output only the guess value without accuracy estimation (useful if you want the output to be machine-readable).")
         ("time-interval,t", value<double>()->default_value(0.25),

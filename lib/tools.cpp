@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <assert.h>
+#include <cmath>
 #include <fstream>
 #include <iomanip>
 #include <ostream>
@@ -13,12 +14,12 @@ int CountLines(
     std::size_t fileSize,
     std::ostream& os,
     double freq,
-    std::size_t chunkSize,
     bool live,
     bool simpleMode)
 {
-    std::string chunk;
-    chunk.resize(chunkSize);
+    std::string buffer;
+    buffer.reserve(1024);
+
     std::size_t remaining = fileSize;
     std::size_t lines = 0u;
 
@@ -44,9 +45,15 @@ int CountLines(
         os << std::flush;
     };
 
-    while (remaining)
+    do
     {
-        lines += ReadChunk(is, chunk, remaining);
+        assert(buffer.empty());
+        std::getline(is, buffer);
+        remaining -= buffer.size();
+        buffer.clear();
+
+        if (!is.eof())
+            ++lines;
 
         if (timer.elapsed() > freq && freq)
         {
@@ -57,27 +64,14 @@ int CountLines(
             else
                 break;
         }
-        else if (!remaining)
+        else if (is.eof())
         {
             update();
         }
     }
+    while (!is.eof());
 
     os << std::endl;
+
     return 0;
-}
-
-std::size_t ReadChunk(
-    std::istream& is,
-    std::string& buf,
-    std::size_t& remaining)
-{
-    const auto n = std::min(buf.size(), remaining);
-    const auto p = &buf[0];
-    is.read(p, n);
-    remaining -= n;
-
-    // FIXME this is the minime viable implementation. It's probably slow and
-    // doesn't take into account OS specifics.
-    return std::count_if(p, p + n, [](auto elem) { return elem == '\n'; });
 }
